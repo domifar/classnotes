@@ -10,8 +10,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
-        //policy.WithOrigins("https://diwiatschool.github.io")
+        //policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins("https://domifar.github.io")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });

@@ -1,0 +1,47 @@
+# https://classnotes-api.azurewebsites.net/
+name: Backend CI/CD
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'ClassNotes.Api/**'
+      - '.github/workflows/backend.yml'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore ClassNotes.Api/ClassNotes.Api.csproj
+
+      - name: Build API
+        run: dotnet build --no-restore ClassNotes.Api/ClassNotes.Api.csproj --configuration Release
+
+      #- name: Build Tests
+      #  run: dotnet build --no-restore ClassNotes.Api/ClassNotes.Tests.csproj --configuration Release
+      
+      - name: Test
+        run: dotnet test classnotes.sln --no-build --verbosity normal
+        # dotnet test ClassNotes.Api/ClassNotes.Tests.csproj
+
+      - name: Publish
+        run: dotnet publish ClassNotes.Api/ClassNotes.Api.csproj --configuration Release --output ./publish
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'ClassNotesDomi' # Replace with your Azure Web App name
+          # Select "Download publish profile" from Azure portal 
+          # and add the content to the repository secrets as AZURE_WEBAPP_PUBLISH_PROFILE
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C4F103ADE1634C9BA54F2D2BE7AFE260 }}
+          package: ./publish

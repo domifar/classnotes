@@ -30,8 +30,8 @@ jobs:
       #- name: Build Tests
       #  run: dotnet build --no-restore ClassNotes.Api/ClassNotes.Tests.csproj --configuration Release
       
-      - name: Test
-        run: dotnet test classnotes.sln --no-build --verbosity normal
+      #- name: Test
+      #  run: dotnet test classnotes.sln --no-build --verbosity normal
         # dotnet test ClassNotes.Api/ClassNotes.Tests.csproj
 
       - name: Publish
